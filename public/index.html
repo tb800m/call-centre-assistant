@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Centre Service Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .config-section {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .config-item {
+            margin-bottom: 15px;
+        }
+        
+        .config-item label {
+            display: block;
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .config-item input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        
+        .load-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .load-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .load-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        
+        .status.loading { background: #fff3cd; color: #856404; }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1em;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .search-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+        
+        .search-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .results {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            min-height: 200px;
+        }
+        
+        .results h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .results-content {
+            color: #555;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .example-queries {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .example-queries h4 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        
+        .example-queries ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .example-queries li {
+            padding: 8px 0;
+            color: #555;
+            cursor: pointer;
+        }
+        
+        .example-queries li:hover {
+            color: #667eea;
+        }
+        
+        .data-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .data-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .data-card h4 {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .data-card p {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 Call Centre Service Assistant</h1>
+            <p>Intelligent pricing and recall information lookup</p>
+        </div>
+        
+        <div class="config-section">
+            <h3>Configuration</h3>
+            <div class="config-item">
+                <label>Google API Key</label>
+                <input type="text" id="googleApiKey" placeholder="AIza...">
+            </div>
+            <button class="load-btn" onclick="loadAllData()">Load Data</button>
+            <div id="statusMessage"></div>
+            <div class="data-summary" id="dataSummary" style="display: none;"></div>
+        </div>
+        
+        <div class="main-content">
+            <div class="search-box">
+                <input type="text" id="queryInput" placeholder="Ask: 'MG HS 2 years 25000 miles' or 'Citroen C3 recall'">
+                <button class="search-btn" id="searchBtn" onclick="handleQuery()" disabled>Search</button>
+            </div>
+            
+            <div class="results">
+                <h3>Results</h3>
+                <div class="results-content" id="resultsContent">
+                    Load your data first, then start asking questions!
+                </div>
+            </div>
+            
+            <div class="example-queries">
+                <h4>Example Queries:</h4>
+                <ul>
+                    <li onclick="setQuery('MG HS 2 years 25000 miles')">• MG HS - 2 years, 25,000 miles</li>
+                    <li onclick="setQuery('Citroen C3 recall')">• Citroen C3 recall</li>
+                    <li onclick="setQuery('Peugeot 3008 major service')">• Peugeot 3008 major service</li>
+                    <li onclick="setQuery('MG ZS EV 3 years 40000 miles')">• MG ZS EV - 3 years, 40k miles</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pricingData = [];
+        let recallData = [];
+        let dataLoaded = false;
+
+        const SHEET_IDS = {
+            sheet1: '1ckendKfB3_wH7EVJXm8SZ_yTywEryOnv5Zh7jJFzDbA',
+            sheet2: '1Z0QL8oH391LluePhkB3ojSPyNHkaoCT5UcWJC0ivims',
+            driveFolder: '1Ea0rFiQbrkRVW_GjfNA8wcy7XJrKtTBj'
+        };
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.style.display = 'block';
+        }
+
+        function updateDataSummary() {
+            const summaryEl = document.getElementById('dataSummary');
+            summaryEl.style.display = 'grid';
+            summaryEl.innerHTML = `
+                <div class="data-card">
+                    <h4>Pricing Records</h4>
+                    <p>${pricingData.length}</p>
+                </div>
+                <div class="data-card">
+                    <h4>Recall Documents</h4>
+                    <p>${recallData.length}</p>
+                </div>
+                <div class="data-card">
+                    <h4>Status</h4>
+                    <p style="color: #28a745; font-size: 1.2em;">✓ Ready</p>
+                </div>
+            `;
+        }
+
+        async function loadGoogleSheet(apiKey, sheetId) {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}&includeGridData=true`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Sheet load failed: ${response.statusText}`);
+            return await response.json();
+        }
+
+        async function loadRecallPDFs(apiKey, folderId) {
+            const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${apiKey}&fields=files(id,name,mimeType)`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Drive load failed: ${response.statusText}`);
+            const data = await response.json();
+            return (data.files || []).filter(f => f.mimeType === 'application/pdf');
+        }
+
+        function parseSheetData(sheetData) {
+            const records = [];
+            const sheets = sheetData.sheets || [];
+            
+            for (const sheet of sheets) {
+                const data = sheet.data?.[0]?.rowData || [];
+                if (data.length < 2) continue;
+                
+                let headerRow = null;
+                let headerIndex = -1;
+                
+                for (let i = 0; i < Math.min(5, data.length); i++) {
+                    const row = data[i];
+                    const values = row.values || [];
+                    const cellText = values.map(v => v.formattedValue || '').join('|').toLowerCase();
+                    if (cellText.includes('model') || cellText.includes('engine')) {
+                        headerRow = values.map(v => v.formattedValue || '');
+                        headerIndex = i;
+                        break;
+                    }
+                }
+                
+                if (!headerRow) continue;
+                
+                for (let i = headerIndex + 1; i < data.length; i++) {
+                    const row = data[i];
+                    const values = row.values || [];
+                    const record = {};
+                    
+                    for (let j = 0; j < values.length && j < headerRow.length; j++) {
+                        const header = headerRow[j];
+                        const value = values[j]?.formattedValue || '';
+                        if (header && value) record[header] = value;
+                    }
+                    
+                    if (Object.keys(record).length > 2) records.push(record);
+                }
+            }
+            
+            return records;
+        }
+
+        async function loadAllData() {
+            const googleApiKey = document.getElementById('googleApiKey').value;
+            
+            if (!googleApiKey) {
+                showStatus('Please enter Google API key', 'error');
+                return;
+            }
+            
+            const loadBtn = document.querySelector('.load-btn');
+            const searchBtn = document.getElementById('searchBtn');
+            loadBtn.disabled = true;
+            loadBtn.textContent = 'Loading...';
+            showStatus('Loading data...', 'loading');
+            
+            try {
+                const [sheet1, sheet2, recalls] = await Promise.all([
+                    loadGoogleSheet(googleApiKey, SHEET_IDS.sheet1),
+                    loadGoogleSheet(googleApiKey, SHEET_IDS.sheet2),
+                    loadRecallPDFs(googleApiKey, SHEET_IDS.driveFolder)
+                ]);
+                
+                pricingData = [...parseSheetData(sheet1), ...parseSheetData(sheet2)];
+                recallData = recalls;
+                
+                dataLoaded = true;
+                searchBtn.disabled = false;
+                showStatus(`Loaded ${pricingData.length} pricing records and ${recallData.length} recalls`, 'success');
+                updateDataSummary();
+                
+                document.getElementById('resultsContent').textContent = 'Data loaded! Ask your questions.';
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+                console.error(error);
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = 'Reload Data';
+            }
+        }
+
+        async function handleQuery() {
+            const query = document.getElementById('queryInput').value.trim();
+            if (!query || !dataLoaded) return;
+            
+            const resultsEl = document.getElementById('resultsContent');
+            const searchBtn = document.getElementById('searchBtn');
+            
+            searchBtn.disabled = true;
+            resultsEl.innerHTML = '<div class="loading-spinner"></div> Thinking...';
+            
+            try {
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query, pricingData, recallData })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultsEl.textContent = `Error: ${data.error}`;
+                } else {
+                    resultsEl.textContent = data.answer;
+                }
+            } catch (error) {
+                resultsEl.textContent = `Error: ${error.message}`;
+            } finally {
+                searchBtn.disabled = false;
+            }
+        }
+
+        function setQuery(query) {
+            document.getElementById('queryInput').value = query;
+            if (dataLoaded) handleQuery();
+        }
+
+        document.getElementById('queryInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && dataLoaded) handleQuery();
+        });
+    </script>
+</body>
+</html>
