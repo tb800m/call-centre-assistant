@@ -1,0 +1,9 @@
+{
+  "name": "call-centre-assistant",
+  "version": "1.0.0",
+  "description": "Call centre service pricing assistant",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.0",
+    "node-fetch": "^2.6.7"
+  }
+}
